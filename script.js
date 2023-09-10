@@ -14,9 +14,9 @@ const player = (sign) => {
 };
 
 const gameBoard = (() => {
-    const board = ['X', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'X'];
+    const board = ['', '', '', '', '', '', '', '', ''];
     
-    const newSign = (index, sign) => {
+    const setSign = (index, sign) => {
         board[index] = sign;
     };
 
@@ -30,15 +30,12 @@ const gameBoard = (() => {
         }
     };
 
-    return { newSign, getSign, resetBoard };
+    return { setSign, getSign, resetBoard };
 })();
 
 const displayController = (() => {
-    const gameSquares = document.querySelectorAll('.game-square');
-    gameSquares.forEach(function(currentSquare) {
-        currentSquare.addEventListener('click', (e) => console.log(e.target.dataset.index));
-    });
-
+    const infoLine = document.querySelector('.info-line');
+    
     const displayBoard = () => {
         for (let i = 0; i < 9; i++) {
             const currentSquare = document.getElementById(`gs${i}`);
@@ -46,18 +43,40 @@ const displayController = (() => {
         }
     };
 
-    const resetBoard = () => {
-        gameBoard.resetBoard();
-        displayBoard();
+    const displayInfo = (message) => {
+        infoLine.textContent = message;
     }
-
-    return { displayBoard, resetBoard };
+    return { displayBoard, displayInfo };
 })();
 
 const gameController = (() => {
     let isOver = false;
+    let lastSign = '';    
 
-    
+    const placeSign = (position) => {
+        if (gameBoard.getSign(position) == '' && isOver != true) {
+            if (lastSign === 'O' || lastSign === '') {
+                gameBoard.setSign(position, 'X');
+                lastSign = 'X';
+                displayController.displayInfo(`Player O's move`);
+            } else {
+                gameBoard.setSign(position, 'O');
+                lastSign = 'O';
+                displayController.displayInfo(`Player X's move`);
+            }
+            displayController.displayBoard();
+            checkForWinner();
+        }
+    };
+
+    const checkForWinner = () => {
+        
+    };
+
+    const gameSquares = document.querySelectorAll('.game-square');
+    gameSquares.forEach(function(currentSquare) {
+        currentSquare.addEventListener('click', (e) => placeSign(e.target.dataset.index));
+    });
 
     return {  };    
 })();
