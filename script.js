@@ -1,6 +1,16 @@
-const player = () => {
+const player = (sign) => {
+    this.sign = sign;
+    this.score = 0;
 
-    return {};
+    const addScore = () => {
+        this.score++;
+    };
+
+    const getScore = () => {
+        return this.score;
+    }
+
+    return { addScore, getScore };
 };
 
 const gameBoard = (() => {
@@ -24,6 +34,11 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
+    const gameSquares = document.querySelectorAll('.game-square');
+    gameSquares.forEach(function(currentSquare) {
+        currentSquare.addEventListener('click', (e) => console.log(e.target.dataset.index));
+    });
+
     const displayBoard = () => {
         for (let i = 0; i < 9; i++) {
             const currentSquare = document.getElementById(`gs${i}`);
@@ -31,10 +46,18 @@ const displayController = (() => {
         }
     };
 
-    return { displayBoard };
+    const resetBoard = () => {
+        gameBoard.resetBoard();
+        displayBoard();
+    }
+
+    return { displayBoard, resetBoard };
 })();
 
-const gameSquares = document.querySelectorAll('.game-square');
-gameSquares.forEach(function(currentSquare) {
-    currentSquare.addEventListener('click', (e) => console.log(e.target.dataset.index));
-});
+const gameController = (() => {
+    let isOver = false;
+
+    
+
+    return {  };    
+})();
