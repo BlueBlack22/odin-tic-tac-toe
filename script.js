@@ -48,13 +48,11 @@ const gameBoard = (() => {
             if (board[i] == sign) {
                 currentPositions.push(i);
             }
-        }
+        } 
 
-        if (currentPositions.length === 3) {
-            for (let i = 0; i < winCombinations.length - 1; i++) {
-                for (let j = 0; j < length)
-            }
-        }  
+        // TODO:
+        // Add a code that checks for a pattern match with the currentPositions array against the winCombinations.
+        // Note: The currentPositions array may consist of more than just 3 indexes while still being a match.
     };
 
     return { setSign, getSign, resetBoard, findWinner };
