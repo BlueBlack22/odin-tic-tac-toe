@@ -15,6 +15,17 @@ const player = (sign) => {
 
 const gameBoard = (() => {
     const board = ['', '', '', '', '', '', '', '', ''];
+
+    const winCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
     
     const setSign = (index, sign) => {
         board[index] = sign;
@@ -30,7 +41,23 @@ const gameBoard = (() => {
         }
     };
 
-    return { setSign, getSign, resetBoard };
+    const findWinner = (sign) => {
+        const currentPositions = [];
+
+        for (let i = 0; i < 9; i++) {
+            if (board[i] == sign) {
+                currentPositions.push(i);
+            }
+        }
+
+        if (currentPositions.length === 3) {
+            for (let i = 0; i < winCombinations.length - 1; i++) {
+                for (let j = 0; j < length)
+            }
+        }  
+    };
+
+    return { setSign, getSign, resetBoard, findWinner };
 })();
 
 const displayController = (() => {
@@ -54,7 +81,7 @@ const gameController = (() => {
     let lastSign = '';    
 
     const placeSign = (position) => {
-        if (gameBoard.getSign(position) == '' && isOver != true) {
+        if (gameBoard.getSign(position) === '' && isOver !== true) {
             if (lastSign === 'O' || lastSign === '') {
                 gameBoard.setSign(position, 'X');
                 lastSign = 'X';
@@ -70,13 +97,13 @@ const gameController = (() => {
     };
 
     const checkForWinner = () => {
-        
+        const result = gameBoard.findWinner(lastSign);
+        console.log(result);
     };
 
     const gameSquares = document.querySelectorAll('.game-square');
     gameSquares.forEach(function(currentSquare) {
         currentSquare.addEventListener('click', (e) => placeSign(e.target.dataset.index));
     });
-
     return {  };    
 })();
