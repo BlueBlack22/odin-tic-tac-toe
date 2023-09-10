@@ -43,6 +43,8 @@ body {
 
 .game-square {
     border: 1px solid #222823;
+    font-size: 5rem;
+    text-align: center;
 }
 
 .score-line {
