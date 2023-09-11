@@ -1,24 +1,12 @@
-const winCombinations = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-];
-
-const player = (sign) => {
-    this.sign = sign;
-    this.score = 0;
+const player = () => {
+    let score = 0;
 
     const addScore = () => {
-        this.score++;
+        score++;
     };
 
     const getScore = () => {
-        return this.score;
+        return score;
     }
 
     return { addScore, getScore };
@@ -70,17 +58,34 @@ const displayController = (() => {
 
     const highlightGrid = (winningCombination) => {
         for (let i = 0; i < 3; i++) {
-            document.getElementById(`gs${winCombinations[winningCombination][i]}`).classList.add('gs-highlighted');
+            document.getElementById(`gs${winningCombination[i]}`).classList.add('gs-highlighted');
         }
     };
-    return { displayBoard, displayInfo, removeGridHighlight, highlightGrid };
+
+    const displayScore = () => {
+        document.getElementById('X-score').textContent = `Player X: ${PlayerX.getScore()}`;
+        document.getElementById('O-score').textContent = `Player O: ${PlayerO.getScore()}`;
+    };
+
+    return { displayBoard, displayInfo, removeGridHighlight, highlightGrid, displayScore };
 })();
 
 const gameController = (() => {
     const playAgainBtn = document.getElementById('play-again');
 
+    const winCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
     let isOver = false;
-    let lastSign = '';    
+    let lastSign = '';
 
     const placeSign = (position) => {
         if (gameBoard.getSign(position) === '' && isOver !== true) {
@@ -107,7 +112,7 @@ const gameController = (() => {
         const board = gameBoard.getBoard();
         let isFull = false;
         let doesMatch = false;
-        let winningCombination;
+        let winningIndex;
 
         for (let i = 0; i < 9; i++) {
             if (board[i] == lastSign) {
@@ -120,22 +125,30 @@ const gameController = (() => {
         for (let i = 0; i < 8; i++) {
             if (findMatches(currentPositions, winCombinations[i])) {
                 doesMatch = true;
-                winningCombination = i;
+                winningIndex = i;
                 break;
             }
         }
         
         if (doesMatch) {
-            declareWinner(winningCombination);
+            declareWinner(winningIndex);
         } else if (isFull) {
             declareDraw();
         }
     };
 
-    const declareWinner = (winningCombination) => {
+    const declareWinner = (winningIndex) => {
         endRound();
         displayController.displayInfo(`Player ${lastSign} wins!`);
-        displayController.highlightGrid(winningCombination);
+        displayController.highlightGrid(winCombinations[winningIndex]);
+
+        if (lastSign === 'X') {
+            PlayerX.addScore();
+        } else {
+            PlayerO.addScore();
+        }
+
+        displayController.displayScore();
     };
 
     const declareDraw = () => {
@@ -150,6 +163,7 @@ const gameController = (() => {
 
     const newRound = () => {
         isOver = false;
+        lastSign = '';
         playAgainBtn.classList.toggle('play-again-hidden');
         displayController.removeGridHighlight();
         displayController.displayInfo(`Player X's move`);
@@ -163,5 +177,9 @@ const gameController = (() => {
     });
 
     playAgainBtn.addEventListener('click', (e) => newRound());
+    
     return {  };    
 })();
+
+const PlayerX = player();
+const PlayerO = player();

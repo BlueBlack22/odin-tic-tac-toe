@@ -67,7 +67,6 @@ body {
     visibility: hidden;
 }
 
-.right-score,
-.left-score {
+.score {
     font-size: 2rem;
 }
