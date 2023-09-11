@@ -47,11 +47,24 @@ body {
     text-align: center;
 }
 
+.gs-highlighted {
+    background-color: lightcoral;
+}
+
 .score-line {
     padding: 20px 0;
     display: flex;
     justify-content: space-between;
-    gap: 5vw;
+    gap: 10vw;
+}
+
+#play-again {
+    font-size: 1.5rem;
+    padding: 5px;
+}
+
+.play-again-hidden {
+    visibility: hidden;
 }
 
 .right-score,

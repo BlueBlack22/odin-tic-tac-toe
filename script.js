@@ -54,6 +54,8 @@ const displayController = (() => {
 })();
 
 const gameController = (() => {
+    const playAgainBtn = document.getElementById('play-again');
+
     let isOver = false;
     let lastSign = '';    
 
@@ -93,6 +95,7 @@ const gameController = (() => {
         const board = gameBoard.getBoard();
         let isFull = false;
         let doesMatch = false;
+        let winningCombination;
 
         for (let i = 0; i < 9; i++) {
             if (board[i] == lastSign) {
@@ -105,20 +108,39 @@ const gameController = (() => {
         for (let i = 0; i < 8; i++) {
             if (findMatches(currentPositions, winCombinations[i])) {
                 doesMatch = true;
+                winningCombination = i;
                 break;
             }
         }
         
         if (doesMatch) {
-            //declare winner
+            declareWinner(winningCombination);
         } else if (isFull) {
-            //declare draw
+            declareDraw();
         }
+    };
+
+    const declareWinner = () => {
+        endRound();
+        displayController.displayInfo(`Player ${lastSign} wins!`);
+        
+    }
+
+    const declareDraw = () => {
+        endRound();
+        displayController.displayInfo('Draw!');
+    }
+
+    const endRound = () => {
+        isOver = true;
+        playAgainBtn.classList.toggle('play-again-hidden');
     };
 
     const gameSquares = document.querySelectorAll('.game-square');
     gameSquares.forEach(function(currentSquare) {
         currentSquare.addEventListener('click', (e) => placeSign(e.target.dataset.index));
     });
+
+    playAgainBtn.addEventListener('click', (e) => console.log('play again'));
     return {  };    
 })();
