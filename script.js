@@ -16,16 +16,9 @@ const player = (sign) => {
 const gameBoard = (() => {
     const board = ['', '', '', '', '', '', '', '', ''];
 
-    const winCombinations = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
+    const getBoard = () => {
+        return board;
+    }
     
     const setSign = (index, sign) => {
         board[index] = sign;
@@ -41,21 +34,7 @@ const gameBoard = (() => {
         }
     };
 
-    const findWinner = (sign) => {
-        const currentPositions = [];
-
-        for (let i = 0; i < 9; i++) {
-            if (board[i] == sign) {
-                currentPositions.push(i);
-            }
-        } 
-
-        // TODO:
-        // Add a code that checks for a pattern match with the currentPositions array against the winCombinations.
-        // Note: The currentPositions array may consist of more than just 3 indexes while still being a match.
-    };
-
-    return { setSign, getSign, resetBoard, findWinner };
+    return { getBoard, setSign, getSign, resetBoard};
 })();
 
 const displayController = (() => {
@@ -94,9 +73,47 @@ const gameController = (() => {
         }
     };
 
+    const winCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
+    const findMatches = (currentPositions, currentCombination) => {
+        return currentCombination.every(item => currentPositions.includes(item));
+    }
+
     const checkForWinner = () => {
-        const result = gameBoard.findWinner(lastSign);
-        console.log(result);
+        const currentPositions = [];
+        const board = gameBoard.getBoard();
+        let isFull = false;
+        let doesMatch = false;
+
+        for (let i = 0; i < 9; i++) {
+            if (board[i] == lastSign) {
+                currentPositions.push(i);
+            }
+        }
+
+        board.includes('') ? isFull = false : isFull = true;
+
+        for (let i = 0; i < 8; i++) {
+            if (findMatches(currentPositions, winCombinations[i])) {
+                doesMatch = true;
+                break;
+            }
+        }
+        
+        if (doesMatch) {
+            //declare winner
+        } else if (isFull) {
+            //declare draw
+        }
     };
 
     const gameSquares = document.querySelectorAll('.game-square');
