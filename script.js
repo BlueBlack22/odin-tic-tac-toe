@@ -1,3 +1,14 @@
+const winCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
+
 const player = (sign) => {
     this.sign = sign;
     this.score = 0;
@@ -26,7 +37,7 @@ const gameBoard = (() => {
 
     const getSign = (index) => {
         return board[index];
-    }
+    };
 
     const resetBoard = () => {
         for (let i = 0; i < 9; i++) {
@@ -49,8 +60,20 @@ const displayController = (() => {
 
     const displayInfo = (message) => {
         infoLine.textContent = message;
-    }
-    return { displayBoard, displayInfo };
+    };
+
+    const removeGridHighlight = () => {
+        for (let i = 0; i < 9; i++) {
+            document.getElementById(`gs${i}`).classList.remove('gs-highlighted');
+        }
+    };
+
+    const highlightGrid = (winningCombination) => {
+        for (let i = 0; i < 3; i++) {
+            document.getElementById(`gs${winCombinations[winningCombination][i]}`).classList.add('gs-highlighted');
+        }
+    };
+    return { displayBoard, displayInfo, removeGridHighlight, highlightGrid };
 })();
 
 const gameController = (() => {
@@ -75,20 +98,9 @@ const gameController = (() => {
         }
     };
 
-    const winCombinations = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
-
     const findMatches = (currentPositions, currentCombination) => {
         return currentCombination.every(item => currentPositions.includes(item));
-    }
+    };
 
     const checkForWinner = () => {
         const currentPositions = [];
@@ -120,20 +132,29 @@ const gameController = (() => {
         }
     };
 
-    const declareWinner = () => {
+    const declareWinner = (winningCombination) => {
         endRound();
         displayController.displayInfo(`Player ${lastSign} wins!`);
-        
-    }
+        displayController.highlightGrid(winningCombination);
+    };
 
     const declareDraw = () => {
         endRound();
         displayController.displayInfo('Draw!');
-    }
+    };
 
     const endRound = () => {
         isOver = true;
         playAgainBtn.classList.toggle('play-again-hidden');
+    };
+
+    const newRound = () => {
+        isOver = false;
+        playAgainBtn.classList.toggle('play-again-hidden');
+        displayController.removeGridHighlight();
+        displayController.displayInfo(`Player X's move`);
+        gameBoard.resetBoard();
+        displayController.displayBoard();
     };
 
     const gameSquares = document.querySelectorAll('.game-square');
@@ -141,6 +162,6 @@ const gameController = (() => {
         currentSquare.addEventListener('click', (e) => placeSign(e.target.dataset.index));
     });
 
-    playAgainBtn.addEventListener('click', (e) => console.log('play again'));
+    playAgainBtn.addEventListener('click', (e) => newRound());
     return {  };    
 })();
